@@ -22,26 +22,26 @@ struct MyApp : OmniApp {
 
   virtual void onDraw(Graphics& g) {
 
-
-    int face = mOmni.face();
+    mShader.end();
+    /*int face = mOmni.face();
     int resolution = mOmni.resolution();
 
-
-
+ 
+    Lens l = lens();
     
     mShader.end();
-    glLoadIdentity();
+    //glLoadIdentity();
     
     double x,y,z,camerax,cameray,cameraz,viewingDirX,viewingDirY,viewingDirZ,upX,upY,upZ;
     double ratio,radians,wd2,ndfl;
-    double left,right,top,bottom,near=Lens.nearClip,far=Lens.farClip;
+    double left,right,top,bottom,near=l.near(),far=l.far();
     
-    /*if (stereo)
-      near = Lens.focalLength / 5;
-    */
+    //if (stereo)
+    //  near = l.focalLength / 5;
+    
     ratio  = 1;
     wd2     = resolution/2;
-    ndfl    = near / Lens.focalLength;
+    ndfl    = near / l.focalLength();
 
     x = 1;
     y = 0;
@@ -49,16 +49,22 @@ struct MyApp : OmniApp {
     camerax=0;
     cameray=0;
     cameraz=-1;
+    viewingDirX=0;
+    viewingDirY=0;
+    viewingDirZ=1;
+    upX=0;
+    upY=1;
+    upZ=0;
     
-    x *= Lens.eyeSep / 2.0;
-    y *= Lens.eyeSep / 2.0;
-    z *= Lens.eyeSep / 2.0;
+    x *= l.eyeSep() / 2.0;
+    y *= l.eyeSep() / 2.0;
+    z *= l.eyeSep() / 2.0;
 
     //left eye
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    left  = - ratio * wd2 - 0.5 * Lens.eyeSep * ndfl;
-    right =   ratio * wd2 - 0.5 * Lens.eyeSep * ndfl;
+    left  = - ratio * wd2 - 0.5 * l.eyeSep() * ndfl;
+    right =   ratio * wd2 - 0.5 * l.eyeSep() * ndfl;
     top    =   wd2;
     bottom = - wd2;
     glFrustum(left,right,bottom,top,near,far);
@@ -66,10 +72,10 @@ struct MyApp : OmniApp {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     gluLookAt(camerax + x,cameray + y,cameraz + z,
-      camerax + x + viewingDirX,
-      cameray + y + viewingDirY,
-      cameraz + z + viewingDirZ,
-      upX,upY,upZ);
+      0,//camerax + x + viewingDirX,
+      0,//cameray + y + viewingDirY,
+      0,//cameraz + z + viewingDirZ,
+      upX,upY,upZ);*/
 
     light();
   // say how much lighting you want
