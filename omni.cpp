@@ -1,4 +1,5 @@
 #include "alloutil/al_OmniApp.hpp"
+#include <GL/glut.h>
 using namespace al;
 
 struct MyApp : OmniApp {
@@ -21,7 +22,9 @@ struct MyApp : OmniApp {
   virtual ~MyApp() {}
 
   virtual void onDraw(Graphics& g) {
-
+    glShadeModel(GL_SMOOTH); 
+glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
     mShader.end();
     /*int face = mOmni.face();
     int resolution = mOmni.resolution();
@@ -84,6 +87,8 @@ struct MyApp : OmniApp {
   //glUseProgram(NULL);
 
     g.draw(mesh);
+    
+    
   }
 
   virtual void onAnimate(al_sec dt) {

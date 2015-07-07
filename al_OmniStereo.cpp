@@ -905,45 +905,212 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 	if (mCubeProgram.id() == 0) onCreate();
 	gl.error("OmniStereo capture begin");
 
+	//mStereo=1;
 	Vec3d pos = pose.pos();
 	Vec3d ux, uy, uz;
 	pose.unitVectors(ux, uy, uz);
 	
-	mModelView = Matrix4d::lookAt(ux, uy, uz, pos);
+	//mModelView = Matrix4d::lookAt(ux, uy, uz, pos);
 
 	mNear = lens.near();
 	mFar = lens.far();
 	const double eyeSep = mStereo ? lens.eyeSep() : 0.;
 
+	double fov=90;
 	
-	Vec3d r = ux*lens.eyeSep()/2;
-	double radians = 0.0174532925 * lens.fovy() / 2;
+	Vec3d r,eye,at,up;
+	double radians = 0.0174532925 * fov / 2;
    	double wd2     = mNear * tan(radians);
     double ndfl    = mNear / lens.focalLength();
 
-    double left  = -wd2 - 0.5 * lens.eyeSep() * ndfl;
-    double right =  wd2 - 0.5 * lens.eyeSep() * ndfl;
-	double top    =  wd2;
-	double bottom = -wd2;
+    double left,right,top,bottom;
 
+			//gl.projection(Matrix4d::identity());
 
-	gl.projection(Matrix4d::identity());
+			//glFrustum(left,right,bottom,top,mNear,mFar);
 
+			// apply camera transform:
+			//gl.pushMatrix(gl.MODELVIEW);
+			//gl.loadMatrix(mModelView);
+			glMatrixMode(GL_MODELVIEW);
+			glPushAttrib(GL_ALL_ATTRIB_BITS);
+			glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
+			gl.viewport(0, 0, mResolution, mResolution);
 
-	//glFrustum(left,right,bottom,top,mNear,mFar);
-
-
-	// apply camera transform:
-	gl.pushMatrix(gl.MODELVIEW);
-	//gl.loadMatrix(mModelView);
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
-	gl.viewport(0, 0, mResolution, mResolution);
-
+	
 	for (int i=0; i<(mStereo+1); i++) {
 		mEyeParallax = eyeSep * (i-0.5);
 		for (mFace=0; mFace<6; mFace++) {
+			switch (i){
+				case 0:
+					left  = -wd2 - 0.5 * lens.eyeSep() * ndfl;
+		    		right =  wd2 - 0.5 * lens.eyeSep() * ndfl;
+					top    =  wd2;
+					bottom = -wd2;
+					switch (mFace){
+						//Face 0 left eye
+						case 0:
+							r=-uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 1:
+							r=uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+						case 2:
+							r=-ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
+							up=Vec3d(uz.x,uz.y,uz.z);
 
+							break;
+							
+						case 3:
+							r=-ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
+							up=Vec3d(-uz.x,-uz.y,-uz.z);
+
+							break;
+						case 4:
+							r=-ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uz.x,pos.y+r.y+uz.y,pos.z+r.z+uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+						case 5:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+							
+						
+					}
+					break;
+				case 1:
+					left  = -wd2 + 0.5 * lens.eyeSep() * ndfl;
+		    		right =  wd2 + 0.5 * lens.eyeSep() * ndfl;
+					top    =  wd2;
+					bottom = -wd2;
+					switch (mFace){
+						
+						case 0:
+							r=uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 1:
+							r=-uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+						case 2:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
+							up=Vec3d(uz.x,uz.y,uz.z);
+
+							break;
+							
+						case 3:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
+							up=Vec3d(-uz.x,-uz.y,-uz.z);
+
+							break;
+						case 4:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uz.x,pos.y+r.y+uz.y,pos.z+r.z+uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+						case 5:
+							r=-ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+							
+							
+						
+					}
+					/*switch (mFace){
+						//Face 0 right eye
+						case 0:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uz.x,pos.y+r.y+uz.y,pos.z+r.z+uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 1:
+							r=-uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 2:
+							r=-ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 3:
+							r=uz*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							break;
+						case 4:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
+							up=Vec3d(-uz.x,-uz.y,-uz.z);
+
+							break;
+						case 5:
+							r=ux*lens.eyeSep()/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
+							up=Vec3d(uz.x,uz.y,uz.z);
+
+							break;
+					}*/
+					break;
+			}
+			/*if(mFace<3){
+				left  = -wd2 + 0.5 * lens.eyeSep() * ndfl;
+	    		right =  wd2 + 0.5 * lens.eyeSep() * ndfl;
+				top    =  wd2;
+				bottom = -wd2;
+				r = -ux*lens.eyeSep()/2;
+			}
+			else{
+				left  = -wd2 - 0.5 * lens.eyeSep() * ndfl;
+	    		right =  wd2 - 0.5 * lens.eyeSep() * ndfl;
+				top    =  wd2;
+				bottom = -wd2;
+				r = ux*lens.eyeSep()/2;
+			}*/
+			
+			glMatrixMode(GL_PROJECTION);
+				
+      		glLoadIdentity();
+			glFrustum(left,right,bottom,top,mNear,mFar);
+			glMatrixMode(GL_MODELVIEW);
+			
 			glDrawBuffer(GL_COLOR_ATTACHMENT0 + mFace);
 			glFramebufferTexture2D(
 				GL_FRAMEBUFFER,
@@ -958,11 +1125,14 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 
 
 			glLoadIdentity();
-	    	gluLookAt(pos.x + r.x,pos.y + r.y,pos.z + r.z,
-	                pos.x + r.x + uz.x,
-	                pos.y + r.y + uz.y,
-	                pos.z + r.z + uz.z,
-	                uy.x,uy.y,uy.z);
+			/*gluLookAt(pos.x + r.x,pos.y + r.y,pos.z + r.z,
+	                pos.x + r.x+ uz.x,
+	                pos.y + r.y+ uz.y,
+	                pos.z + r.z+ uz.z,
+	                uy.x,uy.y,uy.z);*/
+	    	gluLookAt(eye.x,eye.y,eye.z,
+	                at.x, at.y, at.z,
+	                up.x,up.y,up.z);
 
 
 			drawable.onDrawOmni(*this);
@@ -971,7 +1141,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glPopAttrib();
-	gl.popMatrix(gl.MODELVIEW);
+	//gl.popMatrix(gl.MODELVIEW);
 	gl.error("OmniStereo capture end");
 
 	// FBOs don't generate mipmaps by default; do it here:
@@ -993,6 +1163,8 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 		glDisable(GL_TEXTURE_CUBE_MAP);
 	}
 	gl.error("OmniStereo FBO mipmap end");
+
+
 }
 
 void OmniStereo::onFrameFront(OmniStereo::Drawable& drawable, const Lens& lens, const Pose& pose, const Viewport& vp) {

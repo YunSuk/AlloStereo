@@ -289,7 +289,7 @@ void Display(void)
       glFrustum(left,right,bottom,top,near,far);
 
       glMatrixMode(GL_MODELVIEW);
-      glViewport((GLsizei)camera.screenwidth/2,0,(GLsizei)camera.screenwidth/2,(GLsizei)camera.screenheight/2);
+      //glViewport((GLsizei)camera.screenwidth/2,0,(GLsizei)camera.screenwidth/2,(GLsizei)camera.screenheight/2);
       //pseudo (GL_BACK_LEFT);
       glViewport((GLsizei)camera.screenwidth/2,0,(GLsizei)camera.screenwidth/2,(GLsizei)camera.screenheight/2);
       glLoadIdentity();
