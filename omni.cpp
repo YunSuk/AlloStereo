@@ -22,6 +22,7 @@ struct MyApp : OmniApp {
   virtual ~MyApp() {}
 
   virtual void onDraw(Graphics& g) {
+    // glEnable(GL_POLYGON_SMOOTH); 
     glShadeModel(GL_SMOOTH); 
 glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
    glEnable(GL_COLOR_MATERIAL);
@@ -86,7 +87,41 @@ glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
   //glUseProgramObjectARB(0);
   //glUseProgram(NULL);
 
-    g.draw(mesh);
+    /*g.pushMatrix();
+    // rotate over time:
+    g.rotate(MainLoop::now()*30., 0.707, 0.707, 0.);
+    g.translate(3., 0., 0.);*/
+    glPushMatrix();
+    for(int i=0;i<4;i++){
+      g.pushMatrix();
+      g.translate(1,1,5);
+      g.draw(mesh);
+      g.popMatrix();
+      g.pushMatrix();
+      g.translate(-1,1,3);
+      g.draw(mesh);
+      g.popMatrix();
+      
+      glRotatef(90,0,1,0);
+    }
+    glPopMatrix();
+    glPushMatrix();
+
+    for(int i=0;i<2;i++){
+      g.pushMatrix();
+      g.translate(1,5,1);
+      g.draw(mesh);
+      g.popMatrix();
+      g.pushMatrix();
+      g.translate(-1,3,1);
+      g.draw(mesh);
+      g.popMatrix();
+      
+      glRotatef(180,0,0,1);
+    }
+    glPopMatrix();
+    
+//    g.popMatrix();
     
     
   }

@@ -914,7 +914,10 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 
 	mNear = lens.near();
 	mFar = lens.far();
-	const double eyeSep = mStereo ? lens.eyeSep() : 0.;
+	//const double eyeSep = mStereo ? lens.eyeSep() : 0.;
+	const double eyeSep = mStereo ?  lens.focalLength()/20 : 0.;
+
+
 
 	double fov=90;
 	
@@ -943,27 +946,27 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 		for (mFace=0; mFace<6; mFace++) {
 			switch (i){
 				case 0:
-					left  = -wd2 - 0.5 * lens.eyeSep() * ndfl;
-		    		right =  wd2 - 0.5 * lens.eyeSep() * ndfl;
+					left  = -wd2 - 0.5 * eyeSep * ndfl;
+		    		right =  wd2 - 0.5 * eyeSep * ndfl;
 					top    =  wd2;
 					bottom = -wd2;
 					switch (mFace){
 						//Face 0 left eye
 						case 0:
-							r=-uz*lens.eyeSep()/2;
+							r=-uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 						case 1:
-							r=uz*lens.eyeSep()/2;
+							r=uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 							
 						case 2:
-							r=-ux*lens.eyeSep()/2;
+							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
 							up=Vec3d(uz.x,uz.y,uz.z);
@@ -971,21 +974,21 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 							break;
 							
 						case 3:
-							r=-ux*lens.eyeSep()/2;
+							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
 							up=Vec3d(-uz.x,-uz.y,-uz.z);
 
 							break;
 						case 4:
-							r=-ux*lens.eyeSep()/2;
+							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+uz.x,pos.y+r.y+uz.y,pos.z+r.z+uz.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 							
 						case 5:
-							r=ux*lens.eyeSep()/2;
+							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
@@ -996,27 +999,27 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 					}
 					break;
 				case 1:
-					left  = -wd2 + 0.5 * lens.eyeSep() * ndfl;
-		    		right =  wd2 + 0.5 * lens.eyeSep() * ndfl;
+					left  = -wd2 + 0.5 * eyeSep * ndfl;
+		    		right =  wd2 + 0.5 * eyeSep * ndfl;
 					top    =  wd2;
 					bottom = -wd2;
 					switch (mFace){
 						
 						case 0:
-							r=uz*lens.eyeSep()/2;
+							r=uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 						case 1:
-							r=-uz*lens.eyeSep()/2;
+							r=-uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 							
 						case 2:
-							r=ux*lens.eyeSep()/2;
+							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
 							up=Vec3d(uz.x,uz.y,uz.z);
@@ -1024,21 +1027,21 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 							break;
 							
 						case 3:
-							r=ux*lens.eyeSep()/2;
+							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
 							up=Vec3d(-uz.x,-uz.y,-uz.z);
 
 							break;
 						case 4:
-							r=ux*lens.eyeSep()/2;
+							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x+uz.x,pos.y+r.y+uz.y,pos.z+r.z+uz.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
 							
 						case 5:
-							r=-ux*lens.eyeSep()/2;
+							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
