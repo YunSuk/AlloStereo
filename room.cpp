@@ -9,19 +9,19 @@
 using namespace al;
 
 static float svart[] = {0,0,0,1};
-static float vindufarge[] = {0.8,1.0,0.97};
-static float trefarge[] = {0.55,0.35,0.11};
+static float vindufarge[] = {1,1,1,1};//{0.8,1.0,0.97};
+static float trefarge[] = {1,1,1,1};//{0.55,0.35,0.11};
 //static float lystre[] = {0.98,0.96,0.74};
 //static float lystre[] = {0.85,0.47,0.13};
-static float lystre[] = {0.86,0.62,0.12};
+static float lystre[] = {1,1,1,1};//{0.86,0.62,0.12};
 static float hvit[] = {1,1,1,1};
-static float nestensvart[] = {0.25,0.25,0.25,1};
-static float veggfarge[] = {0.9,0.9,0.9,1};
-static float golvfarge[] = {0.73,0.65,0.26};
-static float rod[] = {0.5,0,0};
-static float gulfarge[] = {1,1,0,1};
+static float nestensvart[] = {1,1,1,1};//{0.25,0.25,0.25,1};
+static float veggfarge[] = {1,1,1,1};//{0.9,0.9,0.9,1};
+static float golvfarge[] = {1,1,1,1};//{0.73,0.65,0.26};
+static float rod[] = {1,1,1,1};//{0.5,0,0};
+static float gulfarge[] = {1,1,1,1};//{1,1,0,1};
 static float skinning[] = {100};
-static float morkblaa[] = {0.016,0.216,0.518};
+static float morkblaa[] = {1,1,1,1};//{0.016,0.216,0.518};
 GLfloat xvinkel = 0;
 GLfloat yvinkel = -58.400078;
 GLfloat zvinkel = 0;
@@ -833,8 +833,9 @@ void displaylister()
   glEnable(GL_NORMALIZE);
 
   light();
-
-
+  glDisable(GL_COLOR_MATERIAL);
+//glUseProgramObjectARB(0);
+  //glDisable(GL_SMOOTH);
   g.pushMatrix();
   //g.rotate(MainLoop::now()*2., 0,1,0);
   g.translate(0,0,1);
