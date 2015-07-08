@@ -915,7 +915,8 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 	mNear = lens.near();
 	mFar = lens.far();
 	//const double eyeSep = mStereo ? lens.eyeSep() : 0.;
-	const double eyeSep = mStereo ?  lens.focalLength()/20 : 0.;
+	const double eyeSep =lens.eyeSep();
+	//const double eyeSep = mStereo ?  lens.focalLength()/20 : 0.;
 
 
 
@@ -945,7 +946,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 		mEyeParallax = eyeSep * (i-0.5);
 		for (mFace=0; mFace<6; mFace++) {
 			switch (i){
-				case 0:
+				case 1:
 					left  = -wd2 - 0.5 * eyeSep * ndfl;
 		    		right =  wd2 - 0.5 * eyeSep * ndfl;
 					top    =  wd2;
@@ -953,19 +954,27 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 					switch (mFace){
 						//Face 0 left eye
 						case 0:
+							r=uz*eyeSep/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							
+							break;
+						case 1:
 							r=-uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
-						case 1:
-							r=uz*eyeSep/2;
-							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
-							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
-							up=Vec3d(uy.x,uy.y,uy.z);
-							break;
 							
 						case 2:
+							r=-ux*eyeSep/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
+							up=Vec3d(-uz.x,-uz.y,-uz.z);
+
+							break;
+						case 3:
 							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
@@ -973,13 +982,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 
 							break;
 							
-						case 3:
-							r=-ux*eyeSep/2;
-							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
-							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
-							up=Vec3d(-uz.x,-uz.y,-uz.z);
-
-							break;
+							
 						case 4:
 							r=-ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
@@ -998,7 +1001,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 						
 					}
 					break;
-				case 1:
+				case 0:
 					left  = -wd2 + 0.5 * eyeSep * ndfl;
 		    		right =  wd2 + 0.5 * eyeSep * ndfl;
 					top    =  wd2;
@@ -1006,19 +1009,27 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 					switch (mFace){
 						
 						case 0:
+							r=-uz*eyeSep/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
+							up=Vec3d(uy.x,uy.y,uy.z);
+							
+							break;
+						case 1:
 							r=uz*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-ux.x,pos.y+r.y-ux.y,pos.z+r.z-ux.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
-						case 1:
-							r=-uz*eyeSep/2;
-							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
-							at=Vec3d(pos.x+r.x+ux.x,pos.y+r.y+ux.y,pos.z+r.z+ux.z);
-							up=Vec3d(uy.x,uy.y,uy.z);
-							break;
 							
 						case 2:
+							r=ux*eyeSep/2;
+							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
+							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
+							up=Vec3d(-uz.x,-uz.y,-uz.z);
+
+							break;
+						case 3:
 							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
 							at=Vec3d(pos.x+r.x-uy.x,pos.y+r.y-uy.y,pos.z+r.z-uy.z);
@@ -1026,13 +1037,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 
 							break;
 							
-						case 3:
-							r=ux*eyeSep/2;
-							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
-							at=Vec3d(pos.x+r.x+uy.x,pos.y+r.y+uy.y,pos.z+r.z+uy.z);
-							up=Vec3d(-uz.x,-uz.y,-uz.z);
-
-							break;
+							
 						case 4:
 							r=ux*eyeSep/2;
 							eye=Vec3d(pos.x+r.x,pos.y+r.y,pos.z+r.z);
@@ -1046,7 +1051,6 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 							at=Vec3d(pos.x+r.x-uz.x,pos.y+r.y-uz.y,pos.z+r.z-uz.z);
 							up=Vec3d(uy.x,uy.y,uy.z);
 							break;
-							
 							
 						
 					}
@@ -1135,7 +1139,7 @@ void OmniStereo::capture(OmniStereo::Drawable& drawable, const Lens& lens, const
 	                uy.x,uy.y,uy.z);*/
 	    	gluLookAt(eye.x,eye.y,eye.z,
 	                at.x, at.y, at.z,
-	                up.x,up.y,up.z);
+	                -up.x,-up.y,-up.z);
 
 
 			drawable.onDrawOmni(*this);

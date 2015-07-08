@@ -91,35 +91,43 @@ glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
     // rotate over time:
     g.rotate(MainLoop::now()*30., 0.707, 0.707, 0.);
     g.translate(3., 0., 0.);*/
-    glPushMatrix();
+    g.pushMatrix();
+    g.rotate(45,0,1,0);
+    //g.rotate(MainLoop::now()*10., 1,0,0);
+    g.pushMatrix();
     for(int i=0;i<4;i++){
       g.pushMatrix();
-      g.translate(1,1,5);
+      g.translate(0,1,4);
+      g.rotate(MainLoop::now()*10., 0.3,1,0);
+      g.translate(2,0,1);
       g.draw(mesh);
       g.popMatrix();
       g.pushMatrix();
-      g.translate(-1,1,3);
+      g.translate(0,1,4);
+      g.rotate(MainLoop::now()*10., 0.3, 1, 0);
+      g.translate(-2,0,-1);
       g.draw(mesh);
       g.popMatrix();
       
-      glRotatef(90,0,1,0);
+      g.rotate(90,0,1,0);
     }
-    glPopMatrix();
-    glPushMatrix();
+    g.popMatrix();
+    g.pushMatrix();
 
     for(int i=0;i<2;i++){
       g.pushMatrix();
-      g.translate(1,5,1);
+      g.translate(3,5,1);
       g.draw(mesh);
       g.popMatrix();
       g.pushMatrix();
-      g.translate(-1,3,1);
+      g.translate(-3,3,1);
       g.draw(mesh);
       g.popMatrix();
       
-      glRotatef(180,0,0,1);
+      g.rotate(180,0,0,1);
     }
-    glPopMatrix();
+    g.popMatrix();
+    g.popMatrix();
     
 //    g.popMatrix();
     
